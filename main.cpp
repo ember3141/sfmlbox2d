@@ -79,11 +79,12 @@ Circle createCircle(float x, float y, float radius, float density, float frictio
     return Circle{ radius, color, circleBody };
 }
 
-Box createGround(float x, float y, float width, float height, sf::Color color)
+Box createGround(float x, float y, float width, float height, float angle, sf::Color color)
 {
     // Static body definition
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(x / PPM, y / PPM);
+    groundBodyDef.angle = angle * b2_pi / 180.0f;
 
     // Shape definition
     b2PolygonShape groundBox;
@@ -152,30 +153,18 @@ int main()
     std::vector<Circle> circles;
 
     // Generate ground
-    boxes.push_back(createGround(350, 50, 500, 100, sf::Color::Green));
+    float slopeAngle = 30.0f; // Angle of the slope in degrees
+    float slopeWidth = 500.0f; // Width of the slope
+    float slopeHeight = 100.0f; // Height of the slope
+    float slopeX = 350.0f; // X position of the slope
+    float slopeY = 200.0f; // Y position of the slope
 
-    // Generate a lot of boxes and circles
-    for (int i = 0; i < 307; i++)
-    {
-        // Starting positions are randomly generated: x between 50 and 550, y between 70 and 550
-        if (i % 2 == 0)
-        {
-            auto&& box = createBox(50 + (std::rand() % (550 - 50 + 1)), 70 + (std::rand() % (550 - 70 + 1)), 24, 24, 1.f, 0.7f, sf::Color::White);
-            boxes.push_back(box);
-        }
-        else
-        {
-            auto&& circle = createCircle(50 + (std::rand() % (550 - 50 + 1)), 70 + (std::rand() % (550 - 70 + 1)), 12, 1.f, 0.7f, sf::Color::White);
-            circles.push_back(circle);
-        }
-    }
+    boxes.push_back(createGround(slopeX, slopeY, slopeWidth, slopeHeight, slopeAngle, sf::Color::Green));
+  
 
-    // Create a big blue box
-    auto&& box = createBox(700, 200, 64, 64, 10.f, 0.7f, sf::Color::Blue);
-    boxes.push_back(box);
-
-    // Yeet it leftwards to collide with the smaller boxes
-    box.body->ApplyForceToCenter(b2Vec2(-100000, 10), false);
+    // Create a ball
+    auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::White);
+    circles.push_back(circle);
 
     /** GAME LOOP **/
     while (w.isOpen())
@@ -184,6 +173,14 @@ int main()
         world.Step(1 / 60.f, 6, 3);
         // Render everything
         render(w, boxes, circles);
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+{
+    // left key is pressed: move our character
+       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::White);
+    circles.push_back(circle);
+
+}
     }
 
     return 0;
