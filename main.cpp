@@ -153,13 +153,8 @@ int main()
     std::vector<Circle> circles;
 
     // Generate ground
-    float slopeAngle = 30.0f; // Angle of the slope in degrees
-    float slopeWidth = 500.0f; // Width of the slope
-    float slopeHeight = 100.0f; // Height of the slope
-    float slopeX = 350.0f; // X position of the slope
-    float slopeY = 200.0f; // Y position of the slope
-
-    boxes.push_back(createGround(slopeX, slopeY, slopeWidth, slopeHeight, slopeAngle, sf::Color::Green));
+ 
+    boxes.push_back(createGround(350.0f, 200.0f, 500.0f, 100.0f, 30.0f, sf::Color::Green));
   
 
     // Create a ball
@@ -169,18 +164,47 @@ int main()
     /** GAME LOOP **/
     while (w.isOpen())
     {
+
+            sf::Event event;
+    while (w.pollEvent(event))
+    {
+        if (event.type == sf::Event::Closed)
+            w.close();
+    }
+
         // Update the world, standard arguments
         world.Step(1 / 60.f, 6, 3);
         // Render everything
         render(w, boxes, circles);
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+
+//keypresses
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 {
     // left key is pressed: move our character
-       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::White);
+       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::Red);
     circles.push_back(circle);
 
 }
+
+//green
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
+{
+    // left key is pressed: move our character
+       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::Green);
+    circles.push_back(circle);
+
+}
+//blue
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
+{
+    // left key is pressed: move our character
+       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::Blue);
+    circles.push_back(circle);
+
+}
+
+
     }
 
     return 0;
