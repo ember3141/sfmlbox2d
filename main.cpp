@@ -1,5 +1,5 @@
-#include "include/SFML/Graphics.hpp"
-#include "include/box2d/box2d.h"
+#include "./include/SFML/Graphics.hpp"
+#include "./include/box2d/box2d.h"
 
 #define WINDOW_WIDTH 1500
 #define WINDOW_HEIGHT 1000
