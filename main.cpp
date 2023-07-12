@@ -1,8 +1,8 @@
 #include "include/SFML/Graphics.hpp"
 #include "include/box2d/box2d.h"
 
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 1500
+#define WINDOW_HEIGHT 1000
  
 // Pixels per meter. Box2D uses metric units, so we need to define a conversion
 #define PPM 30.0F
@@ -154,12 +154,16 @@ int main()
 
     // Generate ground
  
-    boxes.push_back(createGround(350.0f, 200.0f, 500.0f, 100.0f, 30.0f, sf::Color::Green));
-  
+    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT*0.85f, 350.0f, 25.0f, 30.0f, sf::Color::White));
+    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT*0.65f, 350.0f, 25.0f, -30.0f, sf::Color::White));
+    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT*0.45f, 350.0f, 25.0f, 30.0f, sf::Color::White));
+    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT*0.25f, 350.0f, 25.0f, -30.0f, sf::Color::White));
+    boxes.push_back(createGround(900.0f, WINDOW_HEIGHT*0.15f, 1000.0f, 25.0f, 0.0f, sf::Color::White));
+    boxes.push_back(createGround(1400.0f, WINDOW_HEIGHT*0.35f, 25.0f, 500.0f, 0.0f, sf::Color::White));
 
     // Create a ball
-    auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::White);
-    circles.push_back(circle);
+    // auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::White);
+    // circles.push_back(circle);
 
     /** GAME LOOP **/
     while (w.isOpen())
@@ -182,7 +186,7 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 {
     // left key is pressed: move our character
-       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::Red);
+       auto&& circle = createCircle(500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Red);
     circles.push_back(circle);
 
 }
@@ -191,7 +195,7 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
 {
     // left key is pressed: move our character
-       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::Green);
+       auto&& circle = createCircle(500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Green);
     circles.push_back(circle);
 
 }
@@ -199,7 +203,7 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
 {
     // left key is pressed: move our character
-       auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::Blue);
+       auto&& circle = createCircle(500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Blue);
     circles.push_back(circle);
 
 }
