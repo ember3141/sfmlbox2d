@@ -3,7 +3,7 @@
 
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
- 
+
 // Pixels per meter. Box2D uses metric units, so we need to define a conversion
 #define PPM 30.0F
 // SFML uses degrees for angles while Box2D uses radians
@@ -27,6 +27,8 @@ struct Circle
     float radius;
     sf::Color color;
     b2Body* body;
+    sf::CircleShape shape;
+    bool halved; // Flag to track if the circle has already halved in size
 };
 
 Box createBox(float x, float y, float width, float height, float density, float friction, sf::Color color)
@@ -76,7 +78,12 @@ Circle createCircle(float x, float y, float radius, float density, float frictio
     // Lastly, assign the fixture
     circleBody->CreateFixture(&fixtureDef);
 
-    return Circle{ radius, color, circleBody };
+    sf::CircleShape shape;
+    shape.setOrigin(radius, radius);
+    shape.setRadius(radius);
+    shape.setFillColor(color);
+
+    return Circle{ radius, color, circleBody, shape, false };
 }
 
 Box createGround(float x, float y, float width, float height, float angle, sf::Color color)
@@ -97,6 +104,7 @@ Box createGround(float x, float y, float width, float height, float angle, sf::C
 
     return Box{ width, height, color, groundBody };
 }
+
 
 void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& circles)
 {
@@ -126,16 +134,13 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
 
     for (const auto& circle : circles)
     {
-        sf::CircleShape shape;
+        sf::CircleShape shape = circle.shape;
 
         // For the correct Y coordinate of our drawable circle, we must subtract from WINDOW_HEIGHT
         // because SFML uses an OpenGL coordinate system where X is right, Y is down
         // while Box2D uses a traditional coordinate system where X is right, Y is up
         shape.setPosition(circle.body->GetPosition().x * PPM, WINDOW_HEIGHT - (circle.body->GetPosition().y * PPM));
 
-        shape.setOrigin(circle.radius, circle.radius);
-        shape.setRadius(circle.radius);
-        shape.setFillColor(circle.color);
         w.draw(shape);
     }
 
@@ -153,79 +158,129 @@ int main()
     std::vector<Circle> circles;
 
     // Generate ground
- 
-    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT*0.85f, 350.0f, 25.0f, 30.0f, sf::Color::White));
-    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT*0.65f, 350.0f, 25.0f, -30.0f, sf::Color::White));
-    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT*0.45f, 350.0f, 25.0f, 30.0f, sf::Color::White));
-    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT*0.25f, 350.0f, 25.0f, -30.0f, sf::Color::White))
-    ;
+    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT * 0.85f, 350.0f, 25.0f, 30.0f, sf::Color::White));
+    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT * 0.65f, 350.0f, 25.0f, -30.0f, sf::Color::White));
+    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT * 0.45f, 350.0f, 25.0f, 30.0f, sf::Color::White));
+    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT * 0.25f, 350.0f, 25.0f, -30.0f, sf::Color::White));
     boxes.push_back(createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::White));
-
-    boxes.push_back(createGround(1400.0f, WINDOW_HEIGHT*0.35f, 25.0f, 500.0f, 0.0f, sf::Color::White));
+    boxes.push_back(createGround(1400.0f, WINDOW_HEIGHT * 0.35f, 25.0f, 500.0f, 0.0f, sf::Color::White));
 
     // Create a ball
-    // auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::White);
-    // circles.push_back(circle);
+    auto&& circle = createCircle(500, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::White);
+    circles.push_back(circle);
 
+    // Create a shrinker (yellow box)
+    auto&& shrinker = createBox(800, WINDOW_HEIGHT * 0.5f, 150, 50, 1.f, 0.7f, sf::Color::Yellow);
+    boxes.push_back(shrinker);
 
-    //keypress stopper
+    // Create a pink box below the yellow box
+    auto&& pinkBox = createBox(800, WINDOW_HEIGHT * 0.6f, 150, 50, 1.f, 0.7f, sf::Color(255, 105, 180));
+    boxes.push_back(pinkBox);
+
+    // Keypress stopper
     bool rl = false;
     bool gl = false;
     bool bl = false;
+
     /** GAME LOOP **/
     while (w.isOpen())
     {
-
-            sf::Event event;
-    while (w.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            w.close();
-    }
+        sf::Event event;
+        while (w.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                w.close();
+        }
 
         // Update the world, standard arguments
         world.Step(1 / 60.f, 6, 3);
         // Render everything
         render(w, boxes, circles);
 
-
-//keypresses
+        // Keypresses
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-{
-    // left key is pressed: move our character
-    if(rl==false){
-       auto&& circle = createCircle(500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Red);
-    circles.push_back(circle);
-    rl=true;
-}
-} else {
-    rl=false;
-}
+        {
+            // left key is pressed: move our character
+            if (rl == false)
+            {
+                auto&& circle = createCircle(500, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::Red);
+                circles.push_back(circle);
+                rl = true;
+            }
+        }
+        else
+        {
+            rl = false;
+        }
 
-//green
+        // Green
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
-{
-    // left key is pressed: move our character
-    if(gl==false){
-       auto&& circle = createCircle(1000, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Green);
-    circles.push_back(circle);
-    gl=true;
-    }
-}else{
-    gl=false;
-}
-//blue
+        {
+            // left key is pressed: move our character
+            if (gl == false)
+            {
+                auto&& circle = createCircle(1000, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::Green);
+                circles.push_back(circle);
+                gl = true;
+            }
+        }
+        else
+        {
+            gl = false;
+        }
+
+        // Blue
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
-{
-    if(bl==false){
-    // left key is pressed: move our character
-       auto&& circle = createCircle(1500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Blue);
-    circles.push_back(circle);
-    bl=true;
-}
-}else{
-    bl=false;
-}
+        {
+            if (bl == false)
+            {
+                // left key is pressed: move our character
+                auto&& circle = createCircle(1500, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::Blue);
+                circles.push_back(circle);
+                bl = true;
+            }
+        }
+        else
+        {
+            bl = false;
+        }
+
+        // Check for collision between balls and yellow box
+        for (auto& circle : circles)
+        {
+            bool collided = false;
+            for (b2ContactEdge* edge = circle.body->GetContactList(); edge; edge = edge->next)
+            {
+                if (edge->other == shrinker.body && !circle.halved)
+                {
+                    collided = true;
+                    break;
+                }
+            }
+
+            if (collided)
+            {
+                // Reduce the size of the ball
+                b2Fixture* fixture = circle.body->GetFixtureList();
+                b2Shape* shape = fixture->GetShape();
+                b2CircleShape* circleShape = dynamic_cast<b2CircleShape*>(shape);
+                if (circleShape)
+                {
+                    // Get the current radius
+                    float currentRadius = circleShape->m_radius;
+                    // Halve the radius
+                    float newRadius = currentRadius / 2;
+                    // Update the shape
+                    circleShape->m_radius = newRadius;
+
+                    // Update the visual size of the circle
+                    circle.shape.setRadius(newRadius * PPM);
+                    circle.shape.setOrigin(newRadius * PPM, newRadius * PPM);
+
+                    circle.halved = true; // Set the flag to indicate halving has occurred
+                }
+            }
+        }
     }
 
     return 0;
