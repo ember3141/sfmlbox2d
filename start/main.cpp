@@ -1,8 +1,8 @@
 #include "./include/SFML/Graphics.hpp"
 #include "./include/box2d/box2d.h"
 
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1500
+#define WINDOW_HEIGHT 1000
  
 // Pixels per meter. Box2D uses metric units, so we need to define a conversion
 #define PPM 30.0F
@@ -145,7 +145,7 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
 int main()
 {
     // Setup SFML window
-    sf::RenderWindow w(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML + Box2D", sf::Style::Fullscreen);
+    sf::RenderWindow w(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML + Box2D");
     w.setFramerateLimit(60);
 
     // Containers to hold all the boxes and circles we create
@@ -157,21 +157,14 @@ int main()
     boxes.push_back(createGround(500.0f, WINDOW_HEIGHT*0.85f, 350.0f, 25.0f, 30.0f, sf::Color::White));
     boxes.push_back(createGround(250.0f, WINDOW_HEIGHT*0.65f, 350.0f, 25.0f, -30.0f, sf::Color::White));
     boxes.push_back(createGround(500.0f, WINDOW_HEIGHT*0.45f, 350.0f, 25.0f, 30.0f, sf::Color::White));
-    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT*0.25f, 350.0f, 25.0f, -30.0f, sf::Color::White))
-    ;
-    boxes.push_back(createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::White));
-
+    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT*0.25f, 350.0f, 25.0f, -30.0f, sf::Color::White));
+    boxes.push_back(createGround(900.0f, WINDOW_HEIGHT*0.15f, 1000.0f, 25.0f, 0.0f, sf::Color::White));
     boxes.push_back(createGround(1400.0f, WINDOW_HEIGHT*0.35f, 25.0f, 500.0f, 0.0f, sf::Color::White));
 
     // Create a ball
     // auto&& circle = createCircle(500, 500, 12, 1.f, 0.7f, sf::Color::White);
     // circles.push_back(circle);
 
-
-    //keypress stopper
-    bool rl = false;
-    bool gl = false;
-    bool bl = false;
     /** GAME LOOP **/
     while (w.isOpen())
     {
@@ -193,39 +186,29 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
 {
     // left key is pressed: move our character
-    if(rl==false){
        auto&& circle = createCircle(500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Red);
     circles.push_back(circle);
-    rl=true;
-}
-} else {
-    rl=false;
+
 }
 
 //green
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
 {
     // left key is pressed: move our character
-    if(gl==false){
-       auto&& circle = createCircle(1000, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Green);
+       auto&& circle = createCircle(500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Green);
     circles.push_back(circle);
-    gl=true;
-    }
-}else{
-    gl=false;
+
 }
 //blue
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
 {
-    if(bl==false){
     // left key is pressed: move our character
-       auto&& circle = createCircle(1500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Blue);
+       auto&& circle = createCircle(500, WINDOW_HEIGHT*0.9f, 12, 1.f, 0.7f, sf::Color::Blue);
     circles.push_back(circle);
-    bl=true;
+
 }
-}else{
-    bl=false;
-}
+
+
     }
 
     return 0;
