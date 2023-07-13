@@ -105,7 +105,6 @@ Box createGround(float x, float y, float width, float height, float angle, sf::C
     return Box{ width, height, color, groundBody };
 }
 
-
 void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& circles)
 {
     w.clear();
@@ -149,33 +148,64 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
 
 int main()
 {
-    // Setup SFML window
-    sf::RenderWindow w(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML + Box2D", sf::Style::Fullscreen);
-    w.setFramerateLimit(60);
 
+    
+    // Setup SFML window
+     sf::ContextSettings settings;
+     settings.antialiasingLevel = 8.0;
+    sf::RenderWindow w(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML + Box2D", sf::Style::Fullscreen, settings);
+    w.setFramerateLimit(60);
+    
     // Containers to hold all the boxes and circles we create
     std::vector<Box> boxes;
     std::vector<Circle> circles;
 
     // Generate ground
-    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT * 0.85f, 350.0f, 25.0f, 30.0f, sf::Color::White));
-    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT * 0.65f, 350.0f, 25.0f, -30.0f, sf::Color::White));
-    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT * 0.45f, 350.0f, 25.0f, 30.0f, sf::Color::White));
-    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT * 0.25f, 350.0f, 25.0f, -30.0f, sf::Color::White));
+    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT * 0.85f, 350.0f, 5.0f, 30.0f, sf::Color::White));
+    
+    boxes.push_back(createGround(300.0f, WINDOW_HEIGHT * 0.70f, 150.0f, 5.0f, -30.0f, sf::Color::White));
+
+
+        boxes.push_back(createGround(225.0f, WINDOW_HEIGHT * 0.80f, 5.0f, 100.0f, 0.0f, sf::Color::White));
+//r
+    boxes.push_back(createGround(500.0f, WINDOW_HEIGHT * 0.65f, 350.0f, 5.0f, 30.0f, sf::Color::White));
+    boxes.push_back(createGround(250.0f, WINDOW_HEIGHT * 0.55f, 350.0f, 5.0f, -30.0f, sf::Color::White));
+    boxes.push_back(createGround(475.0f, WINDOW_HEIGHT * 0.34f, 5.0f, 20.0f, 0.0f, sf::Color::White));
+
+
     boxes.push_back(createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::White));
-    boxes.push_back(createGround(1400.0f, WINDOW_HEIGHT * 0.35f, 25.0f, 500.0f, 0.0f, sf::Color::White));
+
+
+    boxes.push_back(createGround(1200.0f, 125.0f, 25.0f, 350.0f, 1.0f, sf::Color::White));
+
+
+    boxes.push_back(createGround(800.0f, 125.0f, 25.0f, 350.0f, 1.0f, sf::Color::White));
+
+//g
+    boxes.push_back(createGround(900.0f, WINDOW_HEIGHT * 0.90f, 350.0f, 5.0f, 10.0f, sf::Color::White));
+    boxes.push_back(createGround(700.0f, WINDOW_HEIGHT * 0.75f, 350.0f, 5.0f, -20.0f, sf::Color::White));
+    boxes.push_back(createGround(1100.0f, WINDOW_HEIGHT * 0.60f, 350.0f, 5.0f, -5.0f, sf::Color::White));
+//b
+    boxes.push_back(createGround(1500.0f, WINDOW_HEIGHT * 0.80f, 350.0f, 5.0f, 15.0f, sf::Color::White));
+    boxes.push_back(createGround(1200.0f, WINDOW_HEIGHT * 0.50f, 800.0f, 5.0f, 15.0f, sf::Color::White));
+    boxes.push_back(createGround(1650.0f, WINDOW_HEIGHT * 0.65f, 5.0f, 200.0f, 0.0f, sf::Color::White));
+    boxes.push_back(createGround(1650.0f, WINDOW_HEIGHT * 0.50f, 100.0f, 5.0f, -15.0f, sf::Color::White));
+    boxes.push_back(createGround(1735.0f, WINDOW_HEIGHT * 0.50f, 500.0f, 5.0f, 75.0f, sf::Color::White));
+    boxes.push_back(createGround(1450.0f, WINDOW_HEIGHT * 0.40f, 500.0f, 5.0f, 2.0f, sf::Color::White));
+    boxes.push_back(createGround(1000.0f, WINDOW_HEIGHT * 0.35f, 500.0f, 5.0f, 2.0f, sf::Color::White));
+
 
     // Create a ball
     auto&& circle = createCircle(500, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::White);
     circles.push_back(circle);
 
     // Create a shrinker (yellow box)
-    auto&& shrinker = createBox(800, WINDOW_HEIGHT * 0.5f, 150, 50, 1.f, 0.7f, sf::Color::Yellow);
+    auto&& shrinker = createGround(630.0f, WINDOW_HEIGHT * 0.30f, 300.0f, 5.0f, -10.0f, sf::Color::Yellow);
     boxes.push_back(shrinker);
 
     // Create a pink box below the yellow box
-    auto&& pinkBox = createBox(800, WINDOW_HEIGHT * 0.6f, 150, 50, 1.f, 0.7f, sf::Color(255, 105, 180));
-    boxes.push_back(pinkBox);
+    // auto&& pinkBox = createBox(800, WINDOW_HEIGHT * 0.6f, 150, 5, 1.f, 0.7f, sf::Color(255, 105, 180));
+    // boxes.push_back(pinkBox);
 
     // Keypress stopper
     bool rl = false;
@@ -200,10 +230,9 @@ int main()
         // Keypresses
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
         {
-            // left key is pressed: move our character
             if (rl == false)
             {
-                auto&& circle = createCircle(500, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::Red);
+                auto&& circle = createCircle(500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Red);
                 circles.push_back(circle);
                 rl = true;
             }
@@ -216,10 +245,9 @@ int main()
         // Green
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
         {
-            // left key is pressed: move our character
             if (gl == false)
             {
-                auto&& circle = createCircle(1000, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::Green);
+                auto&& circle = createCircle(1000, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Green);
                 circles.push_back(circle);
                 gl = true;
             }
@@ -234,8 +262,7 @@ int main()
         {
             if (bl == false)
             {
-                // left key is pressed: move our character
-                auto&& circle = createCircle(1500, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::Blue);
+                auto&& circle = createCircle(1500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Blue);
                 circles.push_back(circle);
                 bl = true;
             }
