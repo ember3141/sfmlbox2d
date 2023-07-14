@@ -161,7 +161,7 @@ int main()
     std::vector<Circle> circles;
 
     // Generate ground
-       boxes.push_back(createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::White));
+    //    boxes.push_back(createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::White));
        boxes.push_back(createGround(0.0f, 0.0f, 5.0f, 3850.0f, 0.0f, sf::Color::White));//left
        boxes.push_back(createGround(1920.0f, 0.0f, 5.0f, 3850.0f, 0.0f, sf::Color::White));//right
 
@@ -170,22 +170,38 @@ int main()
 
     
 
-    boxes.push_back(createGround(500.0f, 1000.f, 250.0f, 100.0f, 25.0f, sf::Color(255,105,97)));
-    boxes.push_back(createGround(200.0f, 950.f, 300.0f, 50.0f, -25.0f, sf::Color(193,255,193)));
-    boxes.push_back(createGround(225.f, 850.f, 400.0f, 50.0f, 0.0f, sf::Color(174,198,207)));
+    boxes.push_back(createGround(500.0f, 1025.f, 250.0f, 75.0f, 25.0f, sf::Color(255,105,97)));
+    boxes.push_back(createGround(175.0f, 955.f, 300.0f, 50.0f, -25.0f, sf::Color(193,255,193)));
+    boxes.push_back(createGround(225.f, 865.f, 350.0f, 50.0f, -5.0f, sf::Color(174,198,207)));
     boxes.push_back(createGround(425.0f, 725.f, 100.0f, 100.0f, 5.0f, sf::Color(193,255,193)));
     boxes.push_back(createGround(250.0f, 725.f, 125.0f, 50.0f, -25.0f, sf::Color(255,105,97)));
     boxes.push_back(createGround(250.0f, 500.f, 125.0f, 50.0f, -25.0f, sf::Color(174,198,207)));
     boxes.push_back(createGround(450.0f, 350.f, 85.0f, 170.0f, 25.0f, sf::Color(255,105,97)));
-    boxes.push_back(createGround(300.0f, 350.f, 100.0f, 5.0f, -25.0f, sf::Color::White));
+    boxes.push_back(createGround(250.0f, 275.f, 100.0f, 200.0f, -25.0f, sf::Color(193,255,193)));
 
-    boxes.push_back(createGround(500.0f, 800.f, 600.0f, 40.0f, 45.0f, sf::Color(225,165,0))); //k
-    boxes.push_back(createGround(500.0f, 400.f, 600.0f, 40.0f, -45.0f, sf::Color(225,165,0))); //k
-    boxes.push_back(createGround(225.0f, 600.f, 40.0f, 900.0f, 0.0f, sf::Color(225,165,0))); //k
+    boxes.push_back(createGround(520.0f, 790.f, 600.0f, 50.0f, 45.0f, sf::Color(225,165,0))); //k
+    boxes.push_back(createGround(520.0f, 400.f, 600.0f, 50.0f, -45.0f, sf::Color(225,165,0))); //k
+    boxes.push_back(createGround(220.0f, 600.f, 50.0f, 900.0f, 0.0f, sf::Color(225,165,0))); //k
     boxes.push_back(createGround(125.0f, 700.f, 100.0f, 40.0f, -50.0f, sf::Color(225,165,0))); //topspark
     boxes.push_back(createGround(100.0f, 575.f, 100.0f, 40.0f, 0.0f, sf::Color(225,165,0)));//middle spark
     boxes.push_back(createGround(125.0f, 450.f, 100.0f, 40.0f, 50.0f, sf::Color(225,165,0))); //bottomspark
+   
+    //I
+    boxes.push_back(createGround(1000.0f, 875.f, 50.0f, 200.0f, 0.0f, sf::Color(225,165,0))); //I
+    boxes.push_back(createGround(1000.0f, 425.f, 50.0f, 400.0f, 0.0f, sf::Color(225,165,0))); //I
 
+  boxes.push_back(createGround(1000.0f, 975.f, 400.0f, 50.0f, -10.0f, sf::Color(225,165,0))); //I
+    boxes.push_back(createGround(1000.0f, 150.f, 400.0f, 50.0f, -10.0f, sf::Color(225,165,0))); //I
+
+
+        boxes.push_back(createGround(1285.0f, 1000.f, 100.0f, 75.0f, 20.0f, sf::Color(193,255,193)));
+        boxes.push_back(createGround(1250.0f, 800.f, 250.0f, 60.0f, 15.0f, sf::Color(174,198,207)));
+        boxes.push_back(createGround(905.0f, 750.f, 250.0f, 60.0f, 15.0f, sf::Color(255,105,97)));
+        boxes.push_back(createGround(1000.0f, 575.f, 100.0f, 100.0f, -60.0f, sf::Color(193,255,193)));
+        boxes.push_back(createGround(825.0f, 500.f, 100.0f, 100.0f, -15.0f, sf::Color(174,198,207)));
+        boxes.push_back(createGround(650.0f, 500.f, 150.0f, 50.0f, 15.0f, sf::Color(255,105,97)));
+        boxes.push_back(createGround(625.0f, 300.f, 75.0f, 50.0f, 5.0f, sf::Color(193,255,193)));
+        boxes.push_back(createGround(725.0f, 175.f, 60.0f, 150.0f, -5.0f, sf::Color(255,105,97)));
 
 
  
@@ -196,8 +212,10 @@ int main()
     // circles.push_back(circle);
 
     // Create a shrinker (yellow box)
-    auto&& shrinker = createGround(350.0f, 300.f, 50.0f, 50.0f, -10.0f, sf::Color::Yellow);
+    auto&& shrinker = createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::Yellow);
     boxes.push_back(shrinker);
+
+   
 
     // Create a pink box below the yellow box
     // auto&& pinkBox = createBox(800, WINDOW_HEIGHT * 0.6f, 150, 5, 1.f, 0.7f, sf::Color(255, 105, 180));
@@ -243,7 +261,7 @@ int main()
         {
             if (gl == false)
             {
-                auto&& circle = createCircle(1000, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Green);
+                auto&& circle = createCircle(900, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Green);
                 circles.push_back(circle);
                 gl = true;
             }
