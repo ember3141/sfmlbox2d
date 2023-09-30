@@ -17,8 +17,8 @@ b2World world(b2Vec2(0, -11));
 
 //popup setup
 int buttonPressCount = 0;
-int lastButtonPressCount=0;
-bool startCounting=false;
+int lastButtonPressCount = 0;
+bool startCounting = false;
 bool isPopupActive = false;
 sf::Clock popupClock;
 sf::Clock buttonClock;
@@ -27,8 +27,7 @@ sf::Text popupText;
 sf::Text debugText;
 
 // A structure with all we need to render a box
-struct Box
-{
+struct Box {
     float width;
     float height;
     sf::Color color;
@@ -36,8 +35,7 @@ struct Box
 };
 
 // A structure with all we need to render a circle
-struct Circle
-{
+struct Circle {
     float radius;
     sf::Color color;
     b2Body* body;
@@ -122,9 +120,8 @@ Box createGround(float x, float y, float width, float height, float angle, sf::C
 void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& circles)
 {
     w.clear();
-    
-    for (const auto& box : boxes)
-    {
+
+    for (const auto& box : boxes) {
         sf::RectangleShape rect;
 
         // For the correct Y coordinate of our drawable rect, we must subtract from WINDOW_HEIGHT
@@ -146,8 +143,7 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
         w.draw(rect);
     }
 
-    for (const auto& circle : circles)
-    {
+    for (const auto& circle : circles) {
         sf::CircleShape shape = circle.shape;
 
         // For the correct Y coordinate of our drawable circle, we must subtract from WINDOW_HEIGHT
@@ -158,7 +154,7 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
         w.draw(shape);
     }
 
-       // Create an SFML font
+    // Create an SFML font
     sf::Font font;
     if (!font.loadFromFile("style/Roboto-Medium.ttf")) {
         // return -1; // Handle font loading error
@@ -177,10 +173,9 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
     popupText.setOrigin(textBounds.width / 2.0f, textBounds.height / 2.0f);
     popupText.setPosition(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f);
 
-
-    //debug text 
-        debugText.setFont(font); // Set the font
-        // char countString << buttonPressCount
+    //debug text
+    debugText.setFont(font); // Set the font
+    // char countString << buttonPressCount
     debugText.setString(std::to_string(buttonPressCount)); // Set the text string
     debugText.setCharacterSize(48); // Set the character size
     debugText.setFillColor(sf::Color::Black); // Set the text color
@@ -191,18 +186,18 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
     debugText.setOrigin(debugTextBounds.width / 2.0f, debugTextBounds.height / 2.0f);
     debugText.setPosition(WINDOW_WIDTH / 9.0f, WINDOW_HEIGHT / 9.0f);
 
-w.draw(debugText);
-if (isPopupActive) {
-    w.draw(popupText);
-    if (popupClock.getElapsedTime().asSeconds() >= 5) {
-        isPopupActive = false;
+    w.draw(debugText);
+    if (isPopupActive) {
+        w.draw(popupText);
+        if (popupClock.getElapsedTime().asSeconds() >= 5) {
+            isPopupActive = false;
+        }
     }
-}
-    if(startCounting){
-            if (popupClock.getElapsedTime().asSeconds() >= 5) {
-        startCounting = false;
-        buttonPressCount=0;
-    }
+    if (startCounting) {
+        if (popupClock.getElapsedTime().asSeconds() >= 5) {
+            startCounting = false;
+            buttonPressCount = 0;
+        }
     }
     w.display();
 }
@@ -210,85 +205,81 @@ if (isPopupActive) {
 int main()
 {
 
-    
     // Setup SFML window
-     sf::ContextSettings settings;
-     settings.antialiasingLevel = 8.0;
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8.0;
     sf::RenderWindow w(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML + Box2D", sf::Style::Fullscreen, settings);
     w.setFramerateLimit(60);
-    
+
     // Containers to hold all the boxes and circles we create
     std::vector<Box> boxes;
     std::vector<Circle> circles;
 
     // Generate ground
     //    boxes.push_back(createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::White));
-       boxes.push_back(createGround(0.0f, 0.0f, 5.0f, 3850.0f, 0.0f, sf::Color::White));//left
-       boxes.push_back(createGround(1920.0f, 0.0f, 5.0f, 3850.0f, 0.0f, sf::Color::White));//right
+    boxes.push_back(createGround(0.0f, 0.0f, 5.0f, 3850.0f, 0.0f, sf::Color::White)); //left
+    boxes.push_back(createGround(1920.0f, 0.0f, 5.0f, 3850.0f, 0.0f, sf::Color::White)); //right
 
-       //K
+    //K
 
-    int red[3] = {255,105,97};
-    int green[3] = {193,255,193};
-    int blue[3] = {174,198,207};
-    
-    boxes.push_back(createGround(500.0f, 1025.f, 250.0f, 75.0f, 25.0f, sf::Color(red[0],red[1],red[2])));
-    boxes.push_back(createGround(175.0f, 955.f, 300.0f, 50.0f, -25.0f, sf::Color(green[0],green[1],green[2])));
-    boxes.push_back(createGround(225.f, 865.f, 350.0f, 50.0f, -5.0f, sf::Color(blue[0],blue[1],blue[2])));
-    boxes.push_back(createGround(425.0f, 725.f, 100.0f, 100.0f, 5.0f, sf::Color(green[0],green[1],green[2])));
-    boxes.push_back(createGround(250.0f, 725.f, 125.0f, 50.0f, -25.0f, sf::Color(red[0],red[1],red[2])));
-    boxes.push_back(createGround(250.0f, 500.f, 125.0f, 50.0f, -25.0f, sf::Color(blue[0],blue[1],blue[2])));
-    boxes.push_back(createGround(450.0f, 350.f, 85.0f, 170.0f, 25.0f, sf::Color(red[0],red[1],red[2])));
-    boxes.push_back(createGround(250.0f, 275.f, 100.0f, 200.0f, -25.0f, sf::Color(green[0],green[1],green[2])));
+    int red[3] = { 255, 105, 97 };
+    int green[3] = { 193, 255, 193 };
+    int blue[3] = { 174, 198, 207 };
 
-    boxes.push_back(createGround(520.0f, 790.f, 600.0f, 50.0f, 45.0f, sf::Color(225,165,0))); //k
-    boxes.push_back(createGround(520.0f, 400.f, 600.0f, 50.0f, -45.0f, sf::Color(225,165,0))); //k
-    boxes.push_back(createGround(220.0f, 600.f, 50.0f, 900.0f, 0.0f, sf::Color(225,165,0))); //k
-    boxes.push_back(createGround(125.0f, 700.f, 100.0f, 40.0f, -50.0f, sf::Color(225,165,0))); //topspark
-    boxes.push_back(createGround(100.0f, 575.f, 100.0f, 40.0f, 0.0f, sf::Color(225,165,0)));//middle spark
-    boxes.push_back(createGround(125.0f, 450.f, 100.0f, 40.0f, 50.0f, sf::Color(225,165,0))); //bottomspark
-   
+    boxes.push_back(createGround(500.0f, 1025.f, 250.0f, 75.0f, 25.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(175.0f, 955.f, 300.0f, 50.0f, -25.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(225.f, 865.f, 350.0f, 50.0f, -5.0f, sf::Color(blue[0], blue[1], blue[2])));
+    boxes.push_back(createGround(425.0f, 725.f, 100.0f, 100.0f, 5.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(250.0f, 725.f, 125.0f, 50.0f, -25.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(250.0f, 500.f, 125.0f, 50.0f, -25.0f, sf::Color(blue[0], blue[1], blue[2])));
+    boxes.push_back(createGround(450.0f, 350.f, 85.0f, 170.0f, 25.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(250.0f, 275.f, 100.0f, 200.0f, -25.0f, sf::Color(green[0], green[1], green[2])));
+
+    boxes.push_back(createGround(520.0f, 790.f, 600.0f, 50.0f, 45.0f, sf::Color(225, 165, 0))); //k
+    boxes.push_back(createGround(520.0f, 400.f, 600.0f, 50.0f, -45.0f, sf::Color(225, 165, 0))); //k
+    boxes.push_back(createGround(220.0f, 600.f, 50.0f, 900.0f, 0.0f, sf::Color(225, 165, 0))); //k
+    boxes.push_back(createGround(125.0f, 700.f, 100.0f, 40.0f, -50.0f, sf::Color(225, 165, 0))); //topspark
+    boxes.push_back(createGround(100.0f, 575.f, 100.0f, 40.0f, 0.0f, sf::Color(225, 165, 0))); //middle spark
+    boxes.push_back(createGround(125.0f, 450.f, 100.0f, 40.0f, 50.0f, sf::Color(225, 165, 0))); //bottomspark
+
     //I
-    boxes.push_back(createGround(1000.0f, 875.f, 50.0f, 200.0f, 0.0f, sf::Color(225,165,0))); //I
-    boxes.push_back(createGround(1000.0f, 425.f, 50.0f, 400.0f, 0.0f, sf::Color(225,165,0))); //I
+    boxes.push_back(createGround(1000.0f, 875.f, 50.0f, 200.0f, 0.0f, sf::Color(225, 165, 0))); //I
+    boxes.push_back(createGround(1000.0f, 425.f, 50.0f, 400.0f, 0.0f, sf::Color(225, 165, 0))); //I
 
-  boxes.push_back(createGround(1000.0f, 975.f, 400.0f, 50.0f, -10.0f, sf::Color(225,165,0))); //I
-    boxes.push_back(createGround(1000.0f, 150.f, 400.0f, 50.0f, -10.0f, sf::Color(225,165,0))); //I
+    boxes.push_back(createGround(1000.0f, 975.f, 400.0f, 50.0f, -10.0f, sf::Color(225, 165, 0))); //I
+    boxes.push_back(createGround(1000.0f, 150.f, 400.0f, 50.0f, -10.0f, sf::Color(225, 165, 0))); //I
 
+    boxes.push_back(createGround(1285.0f, 1000.f, 100.0f, 75.0f, 20.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(1250.0f, 800.f, 250.0f, 60.0f, 15.0f, sf::Color(blue[0], blue[1], blue[2])));
+    boxes.push_back(createGround(905.0f, 750.f, 250.0f, 60.0f, 15.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(1000.0f, 575.f, 100.0f, 100.0f, -60.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(825.0f, 500.f, 100.0f, 100.0f, -15.0f, sf::Color(blue[0], blue[1], blue[2])));
+    boxes.push_back(createGround(650.0f, 500.f, 150.0f, 50.0f, 15.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(625.0f, 300.f, 75.0f, 50.0f, 5.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(725.0f, 175.f, 60.0f, 150.0f, -5.0f, sf::Color(red[0], red[1], red[2])));
 
-        boxes.push_back(createGround(1285.0f, 1000.f, 100.0f, 75.0f, 20.0f, sf::Color(green[0],green[1],green[2])));
-        boxes.push_back(createGround(1250.0f, 800.f, 250.0f, 60.0f, 15.0f, sf::Color(blue[0],blue[1],blue[2])));
-        boxes.push_back(createGround(905.0f, 750.f, 250.0f, 60.0f, 15.0f, sf::Color(red[0],red[1],red[2])));
-        boxes.push_back(createGround(1000.0f, 575.f, 100.0f, 100.0f, -60.0f, sf::Color(green[0],green[1],green[2])));
-        boxes.push_back(createGround(825.0f, 500.f, 100.0f, 100.0f, -15.0f, sf::Color(blue[0],blue[1],blue[2])));
-        boxes.push_back(createGround(650.0f, 500.f, 150.0f, 50.0f, 15.0f, sf::Color(red[0],red[1],red[2])));
-        boxes.push_back(createGround(625.0f, 300.f, 75.0f, 50.0f, 5.0f, sf::Color(green[0],green[1],green[2])));
-        boxes.push_back(createGround(725.0f, 175.f, 60.0f, 150.0f, -5.0f, sf::Color(red[0],red[1],red[2])));
+    boxes.push_back(createGround(1525.0f, 975.f, 175.0f, 125.0f, 20.0f, sf::Color(blue[0], blue[1], blue[2])));
+    boxes.push_back(createGround(1350.0f, 875.f, 100.0f, 50.0f, -30.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(1500.0f, 825.f, 100.0f, 50.0f, 30.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(1325.0f, 725.f, 150.0f, 100.0f, -30.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(1450.0f, 675.f, 100.0f, 50.0f, -5.0f, sf::Color(blue[0], blue[1], blue[2])));
+    boxes.push_back(createGround(1525.0f, 600.f, 100.0f, 125.0f, -5.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(1550.0f, 450.f, 200.0f, 50.0f, 10.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(1250.0f, 525.f, 300.0f, 70.0f, 10.0f, sf::Color(blue[0], blue[1], blue[2])));
+    boxes.push_back(createGround(1275.0f, 350.f, 275.0f, 50.0f, -10.0f, sf::Color(green[0], green[1], green[2])));
 
+    boxes.push_back(createGround(1325.0f, 550.f, 50.0f, 850.0f, 2.0f, sf::Color(225, 165, 0))); //D
+    boxes.push_back(createGround(1575.0f, 800.f, 50.0f, 475.0f, 45.0f, sf::Color(225, 165, 0))); //D
+    boxes.push_back(createGround(1575.0f, 400.f, 50.0f, 550.0f, -30.0f, sf::Color(225, 165, 0))); //D
 
- 
- boxes.push_back(createGround(1525.0f, 975.f, 175.0f, 125.0f, 20.0f, sf::Color(blue[0],blue[1],blue[2])));
- boxes.push_back(createGround(1350.0f, 875.f, 100.0f, 50.0f, -30.0f, sf::Color(red[0],red[1],red[2])));
- boxes.push_back(createGround(1500.0f, 825.f, 100.0f, 50.0f, 30.0f, sf::Color(green[0],green[1],green[2])));
- boxes.push_back(createGround(1325.0f, 725.f, 150.0f, 100.0f, -30.0f, sf::Color(red[0],red[1],red[2])));
- boxes.push_back(createGround(1450.0f, 675.f, 100.0f, 50.0f, -5.0f, sf::Color(blue[0],blue[1],blue[2])));
- boxes.push_back(createGround(1525.0f, 600.f, 100.0f, 125.0f, -5.0f, sf::Color(green[0],green[1],green[2])));
- boxes.push_back(createGround(1550.0f, 450.f, 200.0f, 50.0f, 10.0f, sf::Color(red[0],red[1],red[2])));
-   boxes.push_back(createGround(1250.0f, 525.f, 300.0f, 70.0f, 10.0f, sf::Color(blue[0],blue[1],blue[2])));
-  boxes.push_back(createGround(1275.0f, 350.f, 275.0f, 50.0f, -10.0f, sf::Color(green[0],green[1],green[2])));
+    //extra
+    boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(1750.0f, 550.f, 150.0f, 75.0f, -25.0f, sf::Color(blue[0], blue[1], blue[2])));
 
-    boxes.push_back(createGround(1325.0f, 550.f, 50.0f, 850.0f, 2.0f, sf::Color(225,165,0))); //D
-    boxes.push_back(createGround(1575.0f, 800.f, 50.0f, 475.0f, 45.0f, sf::Color(225,165,0))); //D
-    boxes.push_back(createGround(1575.0f, 400.f, 50.0f, 550.0f, -30.0f, sf::Color(225,165,0))); //D
-
-//extra
-boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red[0],red[1],red[2])));
-    boxes.push_back(createGround(1750.0f, 550.f, 150.0f, 75.0f, -25.0f, sf::Color(blue[0],blue[1],blue[2])));
-
-  boxes.push_back(createGround(1800.0f, 350.f, 200.0f, 50.0f, 25.0f, sf::Color(green[0],green[1],green[2])));
-    boxes.push_back(createGround(1700.0f, 200.f, 150.0f, 75.0f, -25.0f, sf::Color(red[0],red[1],red[2])));
-    boxes.push_back(createGround(600.0f, 700.f, 150.0f, 75.0f, -25.0f, sf::Color(green[0],green[1],green[2])));
-    boxes.push_back(createGround(800.0f, 850.f, 150.0f, 75.0f, -15.0f, sf::Color(blue[0],blue[1],blue[2])));
+    boxes.push_back(createGround(1800.0f, 350.f, 200.0f, 50.0f, 25.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(1700.0f, 200.f, 150.0f, 75.0f, -25.0f, sf::Color(red[0], red[1], red[2])));
+    boxes.push_back(createGround(600.0f, 700.f, 150.0f, 75.0f, -25.0f, sf::Color(green[0], green[1], green[2])));
+    boxes.push_back(createGround(800.0f, 850.f, 150.0f, 75.0f, -15.0f, sf::Color(blue[0], blue[1], blue[2])));
 
     // Create a ball
     // auto&& circle = createCircle(500, WINDOW_HEIGHT * 0.9f, 12, 1.f, 0.7f, sf::Color::White);
@@ -297,8 +288,6 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
     // Create a shrinker (yellow box)
     auto&& shrinker = createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::Yellow);
     boxes.push_back(shrinker);
-
-   
 
     // Create a pink box below the yellow box
     // auto&& pinkBox = createBox(800, WINDOW_HEIGHT * 0.6f, 150, 5, 1.f, 0.7f, sf::Color(255, 105, 180));
@@ -309,15 +298,10 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
     bool gl = false;
     bool bl = false;
 
-
- 
-
     /** GAME LOOP **/
-    while (w.isOpen())
-    {
+    while (w.isOpen()) {
         sf::Event event;
-        while (w.pollEvent(event))
-        {
+        while (w.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 w.close();
         }
@@ -326,113 +310,97 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
         world.Step(1 / 60.f, 6, 3);
         // Render everything
         render(w, boxes, circles);
-        
-
 
         // Keypresses
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
 
-             if (rl == false)
-            {
-            if(!isPopupActive){
-             buttonPressCount++;
-             if (buttonPressCount >= 10) {
-                 isPopupActive = true;
-                 buttonPressCount = 0;
-                 popupClock.restart();
-             }
-            }
-            if(isPopupActive==false){
-                auto&& circle = createCircle(500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Red);
-                circles.push_back(circle);
-                rl = true;
-            }
+            if (rl == false) {
+                if (!isPopupActive) {
+                    buttonPressCount++;
+                    if (buttonPressCount >= 10) {
+                        isPopupActive = true;
+                        buttonPressCount = 0;
+                        popupClock.restart();
+                    }
+                }
+                if (isPopupActive == false) {
+                    auto&& circle = createCircle(500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Red);
+                    circles.push_back(circle);
+                    rl = true;
+                }
             }
         }
-        else
-        {
+        else {
             rl = false;
         }
 
         // Green
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::G)) {
 
-             if (gl == false)
-            {
-                            if(!isPopupActive){
-             buttonPressCount++;
-             if (buttonPressCount >= 10) {
-                 isPopupActive = true;
-                 buttonPressCount = 0;
-                 popupClock.restart();
-             }
-            }
-if(isPopupActive==false){
-                auto&& circle = createCircle(900, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Green);
-                circles.push_back(circle);
-                gl = true;
-}
+            if (gl == false) {
+                if (!isPopupActive) {
+                    buttonPressCount++;
+                    if (buttonPressCount >= 10) {
+                        isPopupActive = true;
+                        buttonPressCount = 0;
+                        popupClock.restart();
+                    }
+                }
+                if (isPopupActive == false) {
+                    auto&& circle = createCircle(900, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Green);
+                    circles.push_back(circle);
+                    gl = true;
+                }
             }
         }
-        else
-        {
+        else {
             gl = false;
         }
 
         // Blue
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::B)) {
 
-             if (bl == false)
-            {
-                            if(!isPopupActive){
-             buttonPressCount++;
-             if (buttonPressCount >= 10) {
-                 isPopupActive = true;
-                 buttonPressCount = 0;
-                 popupClock.restart();
-             }
-            }
-            if(isPopupActive==false){
-                auto&& circle = createCircle(1500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Blue);
-                circles.push_back(circle);
-                bl = true;
-            }
+            if (bl == false) {
+                if (!isPopupActive) {
+                    buttonPressCount++;
+                    if (buttonPressCount >= 10) {
+                        isPopupActive = true;
+                        buttonPressCount = 0;
+                        popupClock.restart();
+                    }
+                }
+                if (isPopupActive == false) {
+                    auto&& circle = createCircle(1500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Blue);
+                    circles.push_back(circle);
+                    bl = true;
+                }
             }
         }
-        else
-        {
+        else {
             bl = false;
         }
 
-        if(buttonPressCount!=lastButtonPressCount){ // when the button is starting to be pressed, we need to reset it if the person stops pressing
-            startCounting=true;
+        if (buttonPressCount != lastButtonPressCount) { // when the button is starting to be pressed, we need to reset it if the person stops pressing
+            startCounting = true;
             popupClock.restart();
         }
 
         // Check for collision between balls and yellow box
-        for (auto& circle : circles)
-        {
+        for (auto& circle : circles) {
             bool collided = false;
-            for (b2ContactEdge* edge = circle.body->GetContactList(); edge; edge = edge->next)
-            {
-                if (edge->other == shrinker.body && !circle.halved)
-                {
+            for (b2ContactEdge* edge = circle.body->GetContactList(); edge; edge = edge->next) {
+                if (edge->other == shrinker.body && !circle.halved) {
                     collided = true;
                     break;
                 }
             }
 
-            if (collided)
-            {
+            if (collided) {
                 // Reduce the size of the ball
                 b2Fixture* fixture = circle.body->GetFixtureList();
                 b2Shape* shape = fixture->GetShape();
                 b2CircleShape* circleShape = dynamic_cast<b2CircleShape*>(shape);
-                if (circleShape)
-                {
+                if (circleShape) {
                     // Get the current radius
                     float currentRadius = circleShape->m_radius;
                     // Halve the radius
@@ -448,7 +416,7 @@ if(isPopupActive==false){
                 }
             }
         }
-        lastButtonPressCount=buttonPressCount;
+        lastButtonPressCount = buttonPressCount;
     }
 
     return 0;
