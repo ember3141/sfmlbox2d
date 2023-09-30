@@ -3,7 +3,7 @@
 #include "./include/box2d/box2d.h"
 #include <iostream>
 #include <string> // for string and to_string()
-// <SFML/System/Vector2.hpp>
+
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
 
