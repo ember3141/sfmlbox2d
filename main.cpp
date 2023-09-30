@@ -1,6 +1,9 @@
 #include "./include/SFML/Graphics.hpp"
+#include "./include/SFML/System/Vector2.hpp"
 #include "./include/box2d/box2d.h"
-
+#include <iostream>
+#include <string> // for string and to_string()
+// <SFML/System/Vector2.hpp>
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
 
@@ -11,6 +14,17 @@
 
 // Box2D world for physics simulation, gravity = 9 m/s^2
 b2World world(b2Vec2(0, -11));
+
+//popup setup
+int buttonPressCount = 0;
+int lastButtonPressCount=0;
+bool startCounting=false;
+bool isPopupActive = false;
+sf::Clock popupClock;
+sf::Clock buttonClock;
+
+sf::Text popupText;
+sf::Text debugText;
 
 // A structure with all we need to render a box
 struct Box
@@ -144,6 +158,52 @@ void render(sf::RenderWindow& w, std::vector<Box>& boxes, std::vector<Circle>& c
         w.draw(shape);
     }
 
+       // Create an SFML font
+    sf::Font font;
+    if (!font.loadFromFile("style/Roboto-Medium.ttf")) {
+        // return -1; // Handle font loading error
+    }
+
+    // Create an SFML text object
+    sf::Text text;
+    popupText.setFont(font); // Set the font
+    popupText.setString("Racking up a score up on a glass screen while you're withering your worth away"); // Set the text string
+    popupText.setCharacterSize(48); // Set the character size
+    popupText.setFillColor(sf::Color::Black); // Set the text color
+    popupText.setOutlineThickness(20);
+    popupText.setOutlineColor(sf::Color::White);
+    // Calculate the position to center the text
+    sf::FloatRect textBounds = popupText.getLocalBounds();
+    popupText.setOrigin(textBounds.width / 2.0f, textBounds.height / 2.0f);
+    popupText.setPosition(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f);
+
+
+    //debug text 
+        debugText.setFont(font); // Set the font
+        // char countString << buttonPressCount
+    debugText.setString(std::to_string(buttonPressCount)); // Set the text string
+    debugText.setCharacterSize(48); // Set the character size
+    debugText.setFillColor(sf::Color::Black); // Set the text color
+    debugText.setOutlineThickness(20);
+    debugText.setOutlineColor(sf::Color::White);
+    // Calculate the position to center the text
+    sf::FloatRect debugTextBounds = debugText.getLocalBounds();
+    debugText.setOrigin(debugTextBounds.width / 2.0f, debugTextBounds.height / 2.0f);
+    debugText.setPosition(WINDOW_WIDTH / 9.0f, WINDOW_HEIGHT / 9.0f);
+
+w.draw(debugText);
+if (isPopupActive) {
+    w.draw(popupText);
+    if (popupClock.getElapsedTime().asSeconds() >= 5) {
+        isPopupActive = false;
+    }
+}
+    if(startCounting){
+            if (popupClock.getElapsedTime().asSeconds() >= 5) {
+        startCounting = false;
+        buttonPressCount=0;
+    }
+    }
     w.display();
 }
 
@@ -249,6 +309,9 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
     bool gl = false;
     bool bl = false;
 
+
+ 
+
     /** GAME LOOP **/
     while (w.isOpen())
     {
@@ -263,15 +326,28 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
         world.Step(1 / 60.f, 6, 3);
         // Render everything
         render(w, boxes, circles);
+        
+
 
         // Keypresses
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::R))
         {
-            if (rl == false)
+
+             if (rl == false)
             {
+            if(!isPopupActive){
+             buttonPressCount++;
+             if (buttonPressCount >= 10) {
+                 isPopupActive = true;
+                 buttonPressCount = 0;
+                 popupClock.restart();
+             }
+            }
+            if(isPopupActive==false){
                 auto&& circle = createCircle(500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Red);
                 circles.push_back(circle);
                 rl = true;
+            }
             }
         }
         else
@@ -282,11 +358,22 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
         // Green
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::G))
         {
-            if (gl == false)
+
+             if (gl == false)
             {
+                            if(!isPopupActive){
+             buttonPressCount++;
+             if (buttonPressCount >= 10) {
+                 isPopupActive = true;
+                 buttonPressCount = 0;
+                 popupClock.restart();
+             }
+            }
+if(isPopupActive==false){
                 auto&& circle = createCircle(900, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Green);
                 circles.push_back(circle);
                 gl = true;
+}
             }
         }
         else
@@ -297,16 +384,32 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
         // Blue
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::B))
         {
-            if (bl == false)
+
+             if (bl == false)
             {
+                            if(!isPopupActive){
+             buttonPressCount++;
+             if (buttonPressCount >= 10) {
+                 isPopupActive = true;
+                 buttonPressCount = 0;
+                 popupClock.restart();
+             }
+            }
+            if(isPopupActive==false){
                 auto&& circle = createCircle(1500, WINDOW_HEIGHT * 1.02f, 12, 5.f, 0.1f, sf::Color::Blue);
                 circles.push_back(circle);
                 bl = true;
+            }
             }
         }
         else
         {
             bl = false;
+        }
+
+        if(buttonPressCount!=lastButtonPressCount){ // when the button is starting to be pressed, we need to reset it if the person stops pressing
+            startCounting=true;
+            popupClock.restart();
         }
 
         // Check for collision between balls and yellow box
@@ -345,6 +448,7 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
                 }
             }
         }
+        lastButtonPressCount=buttonPressCount;
     }
 
     return 0;
