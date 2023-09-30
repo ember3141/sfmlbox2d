@@ -236,7 +236,6 @@ boxes.push_back(createGround(1825.0f, 750.f, 150.0f, 75.0f, 25.0f, sf::Color(red
 
     // Create a shrinker (yellow box)
     auto&& shrinker = createGround(0.0f, 0.0f, 3850.0f, 5.0f, 0.0f, sf::Color::Yellow);
-
     boxes.push_back(shrinker);
 
    
